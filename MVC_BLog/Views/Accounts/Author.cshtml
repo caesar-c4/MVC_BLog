@@ -1,0 +1,70 @@
+﻿@model MVC_BLog.ViewModels.AuthorViewModel
+@{
+    ViewBag.Title = "Author";
+}
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('/Images/Theme/home-bg.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h1>@Model.Name</h1>
+                    <span class="subheading">@Model.City.Name, @Model.City.Country.Name</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            @if (Model.PostsList != null && Model.PostsList.Count > 0)
+            {
+                foreach (var post in Model.PostsList)
+                {
+                    <div class="post-preview">
+                        <a href="@Url.PostDetailsURL(post.ID, post.URL)">
+                            <h2 class="post-title">
+                                @post.Title
+                            </h2>
+                            <h3 class="post-subtitle">
+                                @post.PostSummary
+                            </h3>
+                        </a>
+                        <p class="post-meta">
+                            Posted by
+                            @Html.ActionLink(post.Author.Name, "Author", "Accounts", new { authorID = post.Author.ID }, null)
+                            on @post.PublishedTime.ToString("D")
+                        </p>
+                    </div>
+                    <hr>
+                }
+
+                if (Model.TotalPosts > Model.PostsList.Count)
+                {
+                    <!-- Pager -->
+                    <div class="clearfix">
+                        <br />
+                        @if (Model.DisplayNext)
+                        {
+                            <a class="btn btn-primary float-right" href="@Url.AuthorPostsNavigate(Model.Author.ID, Model.PageNo + 1, Model.Posts)">Newer Posts &rarr;</a>
+                        }
+                        @if (Model.DisplayPrevious)
+                        {
+                            <a class="btn btn-primary float-left" href="@Url.AuthorPostsNavigate(Model.Author.ID, Model.PageNo - 1, Model.Posts)">&larr; Older Posts</a>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    <strong>Sorry!</strong> No Posts Availble
+                </div>
+            }
+        </div>
+    </div>
+</div>
